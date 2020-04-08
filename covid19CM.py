@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[17]:
+# In[28]:
 
 
 # This Python 3 environment comes with many helpful analytics libraries installed
@@ -22,28 +22,49 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
 # Any results you write to the current directory are saved as output.
 
 
-# In[18]:
+# In[29]:
 
 
 #let us start by reading the data using pandas
-data = pd.read_csv ("../input/train.csv")
+data = pd.read_csv ("../input/train_with_continents.csv")
 
 
-# In[19]:
+# In[30]:
+
+
+data1 = pd.read_csv ("../input/train_week_1_ahead.csv")
+data2 = pd.read_csv ("../input/train_week_two_data.csv")
+
+
+# In[31]:
 
 
 #lets look at how our data looks like for the first few rows
 data.head()
 
 
-# In[20]:
+# In[32]:
+
+
+#checking the data 1 which shows the week one after I joined the competition
+data1.head()
+
+
+# In[33]:
+
+
+#checking the data 2 which shows the week two after I joined the competition
+data2.head()
+
+
+# In[34]:
 
 
 #lets get the information we want to know about the whole data
 display(data.info())
 
 
-# In[21]:
+# In[35]:
 
 
 '''looking at the above data we can see that the date column comes out as an object(string) lets change that for sth 
@@ -53,21 +74,21 @@ from datetime import datetime
 data['Date'] = pd.to_datetime(data['Date'], format = '%m/%d/%Y')
 
 
-# In[22]:
+# In[36]:
 
 
 #lets see if the data.dtype for the date column has changed
 display(data.info())
 
 
-# In[23]:
+# In[37]:
 
 
 #lets look at the unique names for the columns and from there also the unique values so as to drop unwanted data
 list(data.columns)
 
 
-# In[24]:
+# In[38]:
 
 
 #dropping the repeated columns which are the last two
@@ -75,14 +96,14 @@ list(data.columns)
 #data = data.drop(repeated_columns_for_dropping,axis = 1)
 
 
-# In[25]:
+# In[39]:
 
 
 #lets look at the train data description to better understand the data
 data.describe()
 
 
-# In[26]:
+# In[40]:
 
 
 print("Number of Territories: ", data['Territory'].nunique())
@@ -91,14 +112,14 @@ print("Dates go from day", max(data['Date']), "to day", min(data['Date']), ", a 
 #print("Countries with Province/State informed: ", data[data['Province/State'].isna()==False]['Country/Region'].unique())
 
 
-# In[27]:
+# In[41]:
 
 
 #let us look at these territories just to make sure that each stands on its own
 print(data['Territory'].unique())
 
 
-# In[28]:
+# In[42]:
 
 
 #from the above data we can see that each country appears only once 
@@ -106,7 +127,7 @@ print(data['Territory'].unique())
 data['Territory'].value_counts()
 
 
-# In[29]:
+# In[43]:
 
 
 '''# produces Pandas Series
@@ -116,7 +137,7 @@ data.groupby('month')[['duration']].sum()
 '''
 
 
-# In[30]:
+# In[44]:
 
 
 #lets check the number of deaths and infected confirmed cases by using plots
@@ -141,7 +162,7 @@ ax2.set_xlabel("Date", size=10)
 # we know that the virus originated from china so we can use this to compare with the China graph for both the confirmed cases against the deaths and check if the graphs flow the same remembering that during some time china changed how it considered whether somebody was considered positive (11/03/2020).This may be registered as a spike and considering other policies that are put in place that may likely affect the number of cases of the infected people.
 # 
 
-# In[31]:
+# In[45]:
 
 
 #lets draw the curve excluding china
@@ -162,7 +183,7 @@ ax2.set_xlabel("Date", size=10)
 
 # Without China we should be getting a smoother curve as which more or less looks like the SIR model for epidemiology where there is a steep rise then a gentle drop in the number of cases but remember that unlike other countries that can learn from China,China had no prior warning of the contagion.
 
-# In[32]:
+# In[46]:
 
 
 confirmed_total_date_China = data[data['Territory']=='China'].groupby(['Date']).agg({'cases':['sum']})
@@ -180,7 +201,7 @@ ax2.set_ylabel("Number of cases", size=10)
 ax2.set_xlabel("Date", size=10)
 
 
-# In[33]:
+# In[47]:
 
 
 confirmed_total_date_kenya = data[data['Territory']=='Kenya'].groupby(['Date']).agg({'cases':['sum']})
@@ -198,7 +219,7 @@ ax2.set_ylabel("Number of cases", size=10)
 ax2.set_xlabel("Date", size=10)
 
 
-# In[34]:
+# In[48]:
 
 
 #looking at the worst hit countries as of now
@@ -245,7 +266,7 @@ plt.subplot(2, 2, 4)
 total_date_SouthKorea.plot(ax=plt.gca(), title='SouthKorea')
 
 
-# In[35]:
+# In[49]:
 
 
 #what type of data can we deduce from the given data
@@ -253,35 +274,51 @@ total_date_SouthKorea.plot(ax=plt.gca(), title='SouthKorea')
 data.head()
 
 
-# In[36]:
+# In[50]:
 
 
-#calculating the difference between cases and target that will help in getting mortality rate
+#calculating the difference between cases and target that will help in getting mortality rate in different weeks
 data['diff']=data['cases'] - data['target']
+#week one diff
+data1['diff']=data1['cases'] - data1['target']
+#week two diff
+data2['diff']=data2['cases'] - data2['target']
 
 
-# In[37]:
+# In[51]:
+
+
+#calculating the increase in the number of cases between the weeks
+data['weekoneincrease']=data1['cases'] - data['cases']
+data['weektwoincreasefromweekone']=data2['cases'] - data1['cases']
+
+
+# In[52]:
 
 
 #checking whether the difference column has been created
 data.head()
 
 
-# In[38]:
+# In[53]:
 
 
 #calculating the mortality rates of different Territories rounded off to two decimal places
 data['mortality rate'] = round((data['diff']/data['cases']) * 100,2)
+#week one mortality rate
+data['mortality rate week one'] = round((data1['diff']/data1['cases']) * 100,2)
+#week two mortality rate
+data['mortality rate week two'] = round((data2['diff']/data2['cases']) * 100,2)
 
 
-# In[39]:
+# In[54]:
 
 
 #looking at the data type for the various columns that we have
 print(data.dtypes)
 
 
-# In[40]:
+# In[55]:
 
 
 print("Number of mortality rates: ", data['mortality rate'].nunique())
@@ -290,33 +327,36 @@ print("Number of unique differences: ", data['diff'].nunique())
 #print("Number of mortality rates: ", data['diff'].unique())
 
 
-# In[41]:
+# In[56]:
 
 
 #lets look to see if the mortality rate has been calculated for each country
 data.head()
 
 
-# In[42]:
+# In[ ]:
 
 
+#replacing all the Nan values for the mortality rates with 0.0
 data['mortality rate'] = data['mortality rate'].replace(np.nan, 0.00, regex=True)
+data['mortality rate week one'] = data['mortality rate week one'].replace(np.nan, 0.00, regex=True)
+data['mortality rate week two'] = data['mortality rate week two'].replace(np.nan, 0.00, regex=True)
 
 
-# In[43]:
+# In[ ]:
 
 
 data.head()
 
 
-# In[44]:
+# In[ ]:
 
 
 #making sure that we have not changed the various data types with the code above
 print(data.dtypes)
 
 
-# In[45]:
+# In[ ]:
 
 
 #pip install pycountry-convert
@@ -324,7 +364,7 @@ print(data.dtypes)
 #used the alternative which is to tweak the dataset in excel manually and added the column for the continent
 
 
-# In[46]:
+# In[ ]:
 
 
 '''#lets group the respective Territories to their Continents this may help in organizing per R0
@@ -336,7 +376,7 @@ continent_name = pc.country_alpha2_to_continent_code(country_code)
 print(continent_name)'''
 
 
-# In[47]:
+# In[ ]:
 
 
 '''the next part is to check the modal split of the individual continents but there was lack of data for the various
@@ -345,21 +385,21 @@ measures and with those we can use the R0 as a little less than others where peo
 '''
 
 
-# In[48]:
+# In[ ]:
 
 
 #checking whether continent column has any null values
 data['Continent'].isnull()
 
 
-# In[49]:
+# In[ ]:
 
 
 #checking for the data types of all columns
 print(data.dtypes)
 
 
-# In[50]:
+# In[ ]:
 
 
 '''
@@ -429,27 +469,27 @@ def label_race (row):
 data['Stringent'] = data.apply (lambda row: label_race(row), axis=1)
 
 
-# In[51]:
+# In[ ]:
 
 
 data.head()
 
 
-# In[52]:
+# In[ ]:
 
 
 #checking to see if the values for the Stringent stuck
 print("Number of unique values for the Stringent column: ", data['Stringent'].nunique())
 
 
-# In[53]:
+# In[ ]:
 
 
 #checking for the data types of all columns
 print(data.dtypes)
 
 
-# In[58]:
+# In[ ]:
 
 
 '''pre processing and this will be used to make sure that you convert all the object columns into sth that can be 
@@ -467,13 +507,13 @@ def categoricalToInteger(data):
 data = categoricalToInteger(data)
 
 
-# In[59]:
+# In[ ]:
 
 
 data.head()
 
 
-# In[60]:
+# In[ ]:
 
 
 '''we know that the more data we have the better our model will actually become so we can use this to our 
@@ -491,13 +531,13 @@ def create_features(data):
 data = create_features(data)
 
 
-# In[61]:
+# In[ ]:
 
 
 data.head()
 
 
-# In[63]:
+# In[ ]:
 
 
 # lets drop the diff column since it was only used to calculate the mortality rate 
@@ -508,4 +548,10 @@ data=data.drop(['diff'], axis=1)
 
 
 data.head()
+
+
+# In[ ]:
+
+
+#we can also acquire the percentage increase in mortality rate and infection rates and maybe the R0 
 
