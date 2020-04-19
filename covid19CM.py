@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[54]:
+# In[ ]:
 
 
 # This Python 3 environment comes with many helpful analytics libraries installed
@@ -22,7 +22,7 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
 # Any results you write to the current directory are saved as output.
 
 
-# In[55]:
+# In[ ]:
 
 
 #pip install pycountry-convert
@@ -30,14 +30,14 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
 #used the alternative which is to tweak the dataset in excel manually and added the column for the continent
 
 
-# In[56]:
+# In[ ]:
 
 
 #let us start by reading the data using pandas
 data = pd.read_csv ("../input/covid19all/train_with_continents.csv")
 
 
-# In[57]:
+# In[ ]:
 
 
 data1 = pd.read_csv ("../input/covid19all/train_week_1_ahead.csv")
@@ -45,7 +45,7 @@ data2 = pd.read_csv ("../input/covid19all/train_week_two_data.csv")
 data3 = pd.read_csv("../input/last-week-with-continents/last week with continents.csv")
 
 
-# In[58]:
+# In[ ]:
 
 
 '''lets look at whether the data is of the same size and shape so that we can append the necessary columns to the
@@ -57,60 +57,62 @@ print('the size and shape of the data2 is:',data2.shape,'and',data2.size)
 print('the size and shape of the data3 is:',data3.shape,'and',data3.size)
 
 
-# In[59]:
+# In[ ]:
 
 
 #lets look at how our data looks like for the first few rows
 data3.head()
 
 
-# In[60]:
+# In[ ]:
 
 
 #checking the data 1 which shows the week one after I joined the competition
 data1.head()
 
 
-# In[61]:
+# In[ ]:
 
 
 #checking the data 2 which shows the week two after I joined the competition
 data2.head()
 
 
-# In[62]:
+# In[ ]:
 
 
 #lets get the information we want to know about the whole data
 display(data3.info())
 
 
-# In[63]:
+# In[ ]:
 
 
 '''looking at the above data2 we can see that the date column comes out as an object(string) lets change that for sth 
 that is going to be easily used during EDA
 '''
+#creating a copy of some part of the dataframe
+#data3['date'] = data3['Date'].copy()
 from datetime import datetime
 #data2['Date'] = pd.to_datetime(data2['Date'], format = '%m/%d/%Y')
 data3['Date converted'] = pd.to_datetime(data3['Date'])
 
 
-# In[64]:
+# In[ ]:
 
 
 #lets see if the data.dtype for the date column has changed
 display(data3.info())
 
 
-# In[65]:
+# In[ ]:
 
 
 #lets look at the unique names for the columns and from there also the unique values so as to drop unwanted data
 list(data3.columns)
 
 
-# In[66]:
+# In[ ]:
 
 
 #dropping the repeated columns which are the last two
@@ -118,29 +120,29 @@ list(data3.columns)
 #data = data.drop(repeated_columns_for_dropping,axis = 1)
 
 
-# In[67]:
+# In[ ]:
 
 
 #lets look at the train data description to better understand the data
 data3.describe()
 
 
-# In[68]:
+# In[ ]:
 
 
 print("Number of Territories: ", data['Territory'].nunique())
 print("Number of Territories: ", data1['Territory'].nunique())
 print("Number of Territories: ", data2['Territory'].nunique())
 print("Number of Territories: ", data3['Territory'].nunique())
-print("Dates go from day", max(data['Date']), "to day", min(data['Date']), ", a total of", data['Date'].nunique(), "days")
-print("Dates go from day", max(data1['Date']), "to day", min(data1['Date']), ", a total of", data1['Date'].nunique(), "days")
-print("Dates go from day", max(data2['Date']), "to day", min(data2['Date']), ", a total of", data2['Date'].nunique(), "days")
-print("Dates go from day", max(data3['Date']), "to day", min(data3['Date']), ", a total of", data3['Date'].nunique(), "days")
+print("Dates go from day", min(data['Date']), "to day", max(data['Date']), ", a total of", data['Date'].nunique(), "days")
+print("Dates go from day", min(data1['Date']), "to day", max(data1['Date']), ", a total of", data1['Date'].nunique(), "days")
+print("Dates go from day", min(data2['Date']), "to day", max(data2['Date']), ", a total of", data2['Date'].nunique(), "days")
+print("Dates go from day", min(data3['Date']), "to day", max(data3['Date']), ", a total of", data3['Date'].nunique(), "days")
 #our data has no states
 #print("Countries with Province/State informed: ", data[data['Province/State'].isna()==False]['Country/Region'].unique())
 
 
-# In[69]:
+# In[ ]:
 
 
 '''#let us look at these territories just to make sure that each stands on its own
@@ -150,7 +152,7 @@ print(data2['Territory'].nunique())
 '''
 
 
-# In[70]:
+# In[ ]:
 
 
 #from the above data we can see that each country appears only once 
@@ -161,7 +163,7 @@ data2['Territory'].value_counts()
 data3['Territory'].value_counts()
 
 
-# In[71]:
+# In[ ]:
 
 
 '''# produces Pandas Series
@@ -171,7 +173,7 @@ data.groupby('month')[['duration']].sum()
 '''
 
 
-# In[72]:
+# In[ ]:
 
 
 #lets check the number of deaths and infected confirmed cases by using plots
@@ -243,7 +245,7 @@ ax2.set_xlabel("Date", size=10)
 # we know that the virus originated from china so we can use this to compare with the China graph for both the confirmed cases against the deaths and check if the graphs flow the same remembering that during some time china changed how it considered whether somebody was considered positive (11/03/2020).This may be registered as a spike and considering other policies that are put in place that may likely affect the number of cases of the infected people.
 # 
 
-# In[73]:
+# In[ ]:
 
 
 #lets draw the curve excluding china
@@ -311,7 +313,7 @@ ax2.set_xlabel("Date", size=10)
 
 # Without China we should be getting a smoother curve as which more or less looks like the SIR model for epidemiology where there is a steep rise then a gentle drop in the number of cases but remember that unlike other countries that can learn from China,China had no prior warning of the contagion.
 
-# In[74]:
+# In[ ]:
 
 
 #for week one
@@ -374,7 +376,7 @@ ax2.set_ylabel("Number of cases", size=10)
 ax2.set_xlabel("Date", size=10)
 
 
-# In[75]:
+# In[ ]:
 
 
 #for week one
@@ -438,7 +440,7 @@ ax2.set_ylabel("Number of cases", size=10)
 ax2.set_xlabel("Date", size=10)
 
 
-# In[76]:
+# In[ ]:
 
 
 #looking at the worst hit countries as of now for week one
@@ -485,7 +487,7 @@ plt.subplot(2, 2, 4)
 total_date_SouthKorea.plot(ax=plt.gca(), title='SouthKorea')
 
 
-# In[77]:
+# In[ ]:
 
 
 #looking at the worst hit countries as of now for week 2
@@ -532,7 +534,7 @@ plt.subplot(2, 2, 4)
 total_date_SouthKorea.plot(ax=plt.gca(), title='SouthKorea')
 
 
-# In[78]:
+# In[ ]:
 
 
 #looking at the worst hit countries as of now for week 3
@@ -579,7 +581,7 @@ plt.subplot(2, 2, 4)
 total_date_SouthKorea.plot(ax=plt.gca(), title='SouthKorea')
 
 
-# In[79]:
+# In[ ]:
 
 
 #looking at the worst hit countries as of now for last week of the prediction 
@@ -626,7 +628,7 @@ plt.subplot(2, 2, 4)
 total_date_SouthKorea.plot(ax=plt.gca(), title='SouthKorea')
 
 
-# In[80]:
+# In[ ]:
 
 
 #what type of data can we deduce from the given data
@@ -634,7 +636,7 @@ total_date_SouthKorea.plot(ax=plt.gca(), title='SouthKorea')
 data3.head()
 
 
-# In[81]:
+# In[ ]:
 
 
 '''calculating the difference between cases and target that will help in getting mortality rate in different weeks
@@ -648,7 +650,7 @@ data2['diff']=data2['cases'] - data2['target']
 data3['diff']=data3['cases'] - data3['target']
 
 
-# In[82]:
+# In[ ]:
 
 
 #lets look through the three developed diff columns and see whether their are any missing values
@@ -666,7 +668,7 @@ print(data3.isna().any())
 print(data3.isna().sum())
 
 
-# In[83]:
+# In[ ]:
 
 
 '''#calculating the increase in the number of cases between the weeks
@@ -680,21 +682,21 @@ this is no necessary just calculate the values in a descending order
 data3["risen cases"] = data3["cases"].diff(1)
 
 
-# In[84]:
+# In[ ]:
 
 
 #replacing the first value with a zero
 data3["risen cases"]=data3['risen cases'].replace(np.nan, 0.00, regex=True)
 
 
-# In[85]:
+# In[ ]:
 
 
 #checking whether there are any zero values in our latest dataset
 print(data3.isna().sum())
 
 
-# In[86]:
+# In[ ]:
 
 
 #lets also add a column of the rise in deaths to our latest data set
@@ -703,14 +705,14 @@ data3["risen targets daily"] = data3["target"].diff(1)
 data3['risen targets daily'] = data3['risen targets daily'].replace(np.nan, 0.00, regex=True)
 
 
-# In[87]:
+# In[ ]:
 
 
 #checking whether the difference column has been created
 data3.head()
 
 
-# In[88]:
+# In[ ]:
 
 
 #calculating the mortality rates of different Territories rounded off to two decimal places
@@ -718,28 +720,28 @@ data3.head()
 data3['mortality rate last week'] = round((data3['target']/data3['cases']) * 100,2)
 
 
-# In[89]:
+# In[ ]:
 
 
 #replacing the Nans in the mortality rate with 0.00
 data3['mortality rate last week'] = data3['mortality rate last week'].replace(np.nan, 0.00, regex=True)
 
 
-# In[90]:
+# In[ ]:
 
 
 #looking at the data type for the various columns that we have
 print(data3.dtypes)
 
 
-# In[91]:
+# In[ ]:
 
 
 #checking the values for mortality rate
 print("mortality rates in last week: ", data3['mortality rate last week'].nunique())
 
 
-# In[92]:
+# In[ ]:
 
 
 #finding out the rise in mortality rate per day in each of the territories
@@ -748,13 +750,13 @@ data3["mortality rate rise per day"] = data3["mortality rate last week"].diff(1)
 data3['mortality rate rise per day'] = data3['mortality rate rise per day'].replace(np.nan, 0.00, regex=True)
 
 
-# In[93]:
+# In[ ]:
 
 
 data3.head()
 
 
-# In[94]:
+# In[ ]:
 
 
 '''#lets group the respective Territories to their Continents this may help in organizing per R0
@@ -766,7 +768,7 @@ continent_name = pc.country_alpha2_to_continent_code(country_code)
 print(continent_name)'''
 
 
-# In[95]:
+# In[ ]:
 
 
 '''the next part is to check the modal split of the individual continents but there was lack of data for the various
@@ -775,7 +777,7 @@ measures and with those we can use the R0 as a little less than others where peo
 '''
 
 
-# In[105]:
+# In[ ]:
 
 
 '''
@@ -845,33 +847,33 @@ def label_race (row):
 data3['Stringent'] = data3.apply (lambda row: label_race(row), axis=1)
 
 
-# In[106]:
+# In[ ]:
 
 
 data3.head()
 
 
-# In[107]:
+# In[ ]:
 
 
 #checking to see if the values for the Stringent stuck
 print("Number of unique values for the Stringent column: ", data3['Stringent'].nunique())
 
 
-# In[108]:
+# In[ ]:
 
 
 #checking for the data types of all columns
 print(data3.dtypes)
 
 
-# In[109]:
+# In[ ]:
 
 
 print("Number of unique values for the Continent column: ", data3['Continent'].unique())
 
 
-# In[110]:
+# In[ ]:
 
 
 '''looking at the epidemic a country is only as efficient as its health system and am assuming that the 
@@ -898,21 +900,21 @@ def label_economy (row):
 data3['continents economy'] = data3.apply (lambda row: label_economy(row), axis=1)
 
 
-# In[111]:
+# In[ ]:
 
 
 #checking out the data
 data3.head()
 
 
-# In[112]:
+# In[ ]:
 
 
 #checking for the unique values of the continents economy 
 print("Number of unique values for the Continent economy column: ", data3['continents economy'].unique())
 
 
-# In[116]:
+# In[ ]:
 
 
 '''lets look at the countries that have had an encounter with another corona virus epidemic and thus it is 
@@ -972,20 +974,20 @@ def label_sars (row):
 data3['countries sars infections'] = data3.apply (lambda row: label_sars(row), axis=1)
 
 
-# In[119]:
+# In[ ]:
 
 
 #lets view the data head
 data3.head()
 
 
-# In[121]:
+# In[ ]:
 
 
 print(data3.dtypes)
 
 
-# In[122]:
+# In[ ]:
 
 
 '''pre processing and this will be used to make sure that you convert all the object columns into sth that can be 
@@ -1004,13 +1006,13 @@ data2 = categoricalToInteger(data2)
 '''
 
 
-# In[123]:
+# In[ ]:
 
 
 #with the MERS epidemic it is seen to have only affected Saudi Arabia being the focal point of the disease and all
 
 
-# In[125]:
+# In[ ]:
 
 
 '''we know that the more data we have the better our model will actually become so we can use this to our 
@@ -1029,29 +1031,326 @@ def create_features_from_date(data3):
 data3 = create_features_from_date(data3)
 
 
-# In[126]:
+# In[ ]:
 
 
 data3.head()
 
 
-# Now Here is where it is going to get hairy as the Brits would say because we are coming upon the time of training and prediction and some would say the most important part
-
 # In[ ]:
 
 
-# lets drop the column since it was only used to calculate the mortality rate 
-data3=data3.drop(['diff'], axis=1)
-
-
-# In[ ]:
-
-
-data2.head()
+#Trying out something lets see how it works with what I already have
 
 
 # In[ ]:
 
 
-#we can also acquire the percentage increase in mortality rate and infection rates and maybe the R0 
+'''
+#example when using the time delta function in present time
+from datetime import datetime, timedelta  
+# Using current time 
+ini_time_for_now = datetime.now() 
+# printing initial_date 
+print ("initial_date", str(ini_time_for_now))  
+# Calculating future dates 
+# for two years 
+future_date_after_2yrs = ini_time_for_now + \ 
+                        timedelta(days = 730) 
+  
+future_date_after_2days = ini_time_for_now + \ 
+                         timedelta(days = 2) 
+  
+# printing calculated future_dates 
+print('future_date_after_2yrs:', str(future_date_after_2yrs)) 
+print('future_date_after_2days:', str(future_date_after_2days))
+
+#another example of time delta usage in calculating the difference
+
+from datetime import datetime, timedelta 
+  
+# Using current time 
+ini_time_for_now = datetime.now() 
+  
+# printing initial_date 
+print ("initial_date", str(ini_time_for_now)) 
+  
+# Some another datetime 
+new_final_time = ini_time_for_now + \timedelta(days = 2) 
+  
+# printing new final_date 
+print ("new_final_time", str(new_final_time)) 
+  
+  
+# printing calculated past_dates 
+print('Time difference:', str(new_final_time - \ini_time_for_now)) 
+'''
+
+
+# In[ ]:
+
+
+#importing all the necessary dependencies on top of the ones I had already imported 
+import matplotlib.pyplot as plt
+#time delta is mainly used for time manipulation and looking at the fact that we are gooing to be using future forecast
+from datetime import datetime, timedelta,date
+#pandas profiling is a level up from the normal describe and info that give basic analytics
+import pandas_profiling 
+from pandas_profiling import ProfileReport
+import seaborn as sns
+from sklearn.metrics import mean_absolute_error as mae
+
+#importing machine learning libraries
+from sklearn.model_selection import KFold, cross_val_score, train_test_split
+from sklearn.metrics import confusion_matrix
+import sklearn.metrics as metrics
+from sklearn.cluster import KMeans
+
+
+from sklearn.ensemble import RandomForestClassifier
+from xgboost.sklearn import XGBClassifier
+
+#importing regressors
+from xgboost.sklearn import XGBRegressor
+#from catboost import CatBoostRegressor
+from numpy import sqrt 
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+from sklearn.tree import DecisionTreeRegressor
+#from catboost import Pool
+from sklearn import svm
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeRegressor
+
+
+#ignoring warnings
+import warnings
+warnings.filterwarnings("ignore")
+
+from pandas_profiling import ProfileReport
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import RandomizedSearchCV
+
+#allowing visualizastions inline
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+#Pipeline and encoders
+#from sklearn.compose import columnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import OneHotEncoder
+from sklearn import preprocessing
+
+
+# In[ ]:
+
+
+data3withoutcases = data3.drop(["Territory X Date" ],axis=1)
+
+data3withoutcases.fillna(0,inplace=True)
+ter_enc = {}
+
+regions = sorted(data3withoutcases['Territory'].unique())
+for r in regions:
+    x = data3withoutcases[data3withoutcases.Territory == r]['mortality rate last week']
+    ter_enc[r] = x.values[len(x.values)-1]
+
+
+# In[ ]:
+
+
+data3withoutcases.head()
+
+
+# In[ ]:
+
+
+#An all encoder for the datas3,validation set and test set on creating them
+def AllEncoder(train,validation,test ,entype,cols_index):
+
+  encoder = None
+  if entype == "l": 
+    lab_enc = LabelEncoder()
+    for col_index in cols_index :
+      data3[col_index] = lab_enc.fit_transform(data3[col_index])
+      validation[col_index] = lab_enc.transform(validation[col_index])
+      test[col_index] = lab_enc.transform(test[col_index])        
+
+  elif entype == "h" :
+     oh_enc = OneHotEncoder(handle_unknown = 'ignore' , sparse = False)
+     OH_cols_data3 = pd.DataFrame(oh_enc.fit_transform(data3[cols_index]))
+     OH_cols_valid = pd.DataFrame(oh_enc.transform(validation[cols_index]))
+     OH_cols_test = pd.DataFrame(oh_enc.transform(test[cols_index]))
+     OH_cols_data3.index = data3.index
+     OH_cols_valid.index = validation.index
+     OH_cols_test.index = test.index
+     numerical_data3 = data3.drop(cols_index , axis = 1)
+     numerical_valid = validation.drop(cols_index , axis = 1)
+     numerical_test = test.drop(cols_index , axis = 1)
+     data3 = pd.concat([numerical_data3 , OH_cols_data3], axis = 1 ) 
+     validation = pd.concat([numerical_valid , OH_cols_valid] , axis = 1)
+     test = pd.concat([numerical_test , OH_cols_test] , axis = 1)
+  elif entype == "m" :
+       
+    #mean encoding
+    from sklearn.model_selection import KFold
+    kf = KFold(n_splits = 5 , shuffle = False )
+    for data3_index , val_index in kf.split(df) :
+        X_data3 , X_val = df.iloc[data3_index] , df.iloc[val_index]
+        df.loc[val_index,'Terr_mean_encoded'] = X_val['Territory'].map(X_data3.groupby('Territory')['target'].mean())
+    df['Terr_mean_encoded'].fillna(df.target.mean(), inplace=True) # filling the na with globel mean
+    ter_enc = {'Territory':df['Territory'] , 'Terr_mean_encoded' : df['Terr_mean_encoded']}
+    test['Terr_mean_encoded'] = df['Territory'].map()
+
+
+  else : 
+      print("use h , l or m for entype")
+    
+    
+  return  data3,validation,test
+
+
+def handle_bad_cols(trainx,val_test):
+  object_cols = [col for col in trainx.columns if trainx[col].dtype == 'object'] 
+  good_label_cols = [col for col in object_cols if set(trainx[col]) == set(val_test[col]) ]
+  bad_label_cols = list( set(object_cols) - set(good_label_cols) )
+  for i in bad_label_cols:
+    most = trainx[i].value_counts().index[0]
+    labels = trainx[i].unique()
+    val_test[i] = val_test[i].apply(lambda x : x if x in labels else most)
+  return val_test
+
+
+# In[ ]:
+
+
+#you have to use strptime to convert a string into date
+from datetime import datetime
+lastweekindex = data3withoutcases[data3withoutcases['Date converted'] >= datetime.strptime('2020-4-1','%Y-%m-%d')  ].index
+validate = data3withoutcases.iloc[lastweekindex]
+data3withoutcases = data3withoutcases.drop(lastweekindex) 
+
+
+# In[ ]:
+
+
+from datetime import datetime
+submission = pd.read_csv("../input/covid-submission-sample/SampleSubmission.csv")
+
+
+# In[ ]:
+
+
+submission.head()
+
+
+# In[ ]:
+
+
+print(submission.columns)
+
+
+# In[ ]:
+
+
+# Add Separate Region and Date columns
+submission['Territory'] = submission['Region X Date'].apply(lambda x: x.split(' X ')[0])
+submission['Date'] = submission['Region X Date'].apply(lambda x: datetime(
+        int("20"+x.split(' X ')[1].split("/")[2]),
+        int(x.split(' X ')[1].split("/")[0]),
+        int(x.split(' X ')[1].split("/")[1])
+        ))
+
+submissionclean = submission.drop(["Region X Date"],axis=1)
+
+#submission['week_num'] = submission.Date.apply(lambda d: datetime(d).strftime("%V"))
+#submission = submission.merge(train.drop(['month','day','Date'],axis = 1) , on ['Territory','week_num']) 
+
+#submissionclean["year"] = submissionclean.Date.apply(lambda x : x.year)
+submissionclean["month"] = submissionclean.Date.apply(lambda x : x.month)
+submissionclean["day"] = submissionclean.Date.apply(lambda x : x.day)
+#submissionclean["weekday"] = submissionclean.Date.apply(lambda x : x.weekday())
+submission.drop("Date",axis=1,inplace=True)
+#submissionclean.drop("Date",axis=1,inplace=True)
+#submissionclean['Terr_mean_encoded'] = submissionclean['Territory'].map(ter_enc)
+submissionclean.head()
+
+
+# In[ ]:
+
+
+submissionclean_death = submissionclean.copy()
+
+
+# In[ ]:
+
+
+submissionclean_death['deathrate'] = submissionclean_death['Territory'].map(ter_enc)
+
+
+# In[ ]:
+
+
+submissionclean_death['cases'] = data3['cases']
+submissionclean_death.fillna(0 , inplace = True)
+submissionclean_death
+
+
+# In[ ]:
+
+
+data3withoutcases.head()
+
+
+# In[ ]:
+
+
+cases_enc = {}
+
+regions = sorted(submissionclean_death['Territory'].unique())
+for r in regions:
+    cases_per_Terr = submissionclean_death[submissionclean_death.Territory == r]['cases']
+    cases_enc[r] = np.max(cases_per_Terr.values)
+cases_enc
+#submissionclean_death[submissionclean_death.Date > datetime(2020,3,23)]
+
+
+# In[ ]:
+
+
+submissionclean_death['cases'] = submissionclean_death['Territory'].map(cases_enc)
+index = submissionclean[submissionclean.Date <= data3['Date converted'][len(data3)-1]].target.index
+index2 = data3[data3['Date converted'] >= submissionclean.Date[0]].target.index 
+#timesteps = len(submission.iloc[index].Date.unique())
+#print(len(index),len(index2))
+for i in range(len(index)):
+#submissionclean.target[index[i]]= train.target[index2[i]]
+  submissionclean_death.cases[index[i]]= data3.cases[index2[i]] 
+
+submissionclean_death.fillna(0 , inplace = True)  
+submissionclean_death
+
+
+# In[ ]:
+
+
+trainwithoutcasesL , validateL , submissioncleanL = AllEncoder(trainwithoutcases,validate,submissionclean,"l",["Territory"])
+
+
+# In[ ]:
+
+
+#Here is how you create a submission csv for the competition
+dates = pd.date_range(start='2020-03-06', end='2020-06-07', freq='1d')
+ids = []
+for c in sorted(data3['Territory'].unique()):
+  for d in dates:
+    ids.append(c + ' X ' + d.strftime('%m/%d/%y'))
+ss = pd.DataFrame({
+    'Territory X Date':ids,
+    'target':0
+})
+ss.to_csv('SampleSubmission.csv', index=False)
+ss.head()
 
